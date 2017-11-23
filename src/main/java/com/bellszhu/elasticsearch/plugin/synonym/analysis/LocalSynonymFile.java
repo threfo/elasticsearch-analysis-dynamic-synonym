@@ -3,10 +3,7 @@
  */
 package com.bellszhu.elasticsearch.plugin.synonym.analysis;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.nio.file.Path;
 
 import org.apache.commons.codec.Charsets;
@@ -15,6 +12,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.synonym.SolrSynonymParser;
 import org.apache.lucene.analysis.synonym.SynonymMap;
 import org.apache.lucene.analysis.synonym.WordnetSynonymParser;
+import org.elasticsearch.common.io.FastStringReader;
 import org.elasticsearch.common.io.FileSystemUtils;
 import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.env.Environment;
@@ -82,11 +80,9 @@ public class LocalSynonymFile implements SynonymFile {
 		Reader reader = null;
 		BufferedReader br = null;
 		try {
-			reader = FileSystemUtils.newBufferedReader(
-                    synonymFilePath.toUri().toURL(), Charsets.UTF_8);
-			/*
+
 			br = new BufferedReader(new InputStreamReader(
-					synonymFileURL.openStream(), Charsets.UTF_8));
+					synonymFilePath.toUri().toURL().openStream(), Charsets.UTF_8));
 			StringBuffer sb = new StringBuffer("");
 			String line = null;
 			while ((line = br.readLine()) != null) {
@@ -94,7 +90,7 @@ public class LocalSynonymFile implements SynonymFile {
 				sb.append(line).append(System.getProperty("line.separator"));
 			}
 			reader = new FastStringReader(sb.toString());
-			*/
+
 		} catch (IOException e) {
 			logger.error("get local synonym reader {} error!", e, location);
 			throw new IllegalArgumentException(
